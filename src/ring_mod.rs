@@ -24,13 +24,9 @@ pub struct RingModParams {
 }
 
 pub fn ring_mod(
-    // the sample rate of the signal
     sample_rate: u32,
-    // the total number of samples
-    sample_length: usize,
-    // the signal to apply the effect to
+    signal_length: usize,
     signal: impl AsRef<[i32]>,
-    // parameters for the ring mod
     params: &RingModParams,
 ) -> Vec<i32> {
     let mut res = vec![];
@@ -47,7 +43,7 @@ pub fn ring_mod(
 
     let lfo_increment = 2.0 * PI * params.rate / sample_rate as f32;
 
-    for _ in 0..sample_length {
+    for _ in 0..signal_length {
         lfo_phase = (lfo_phase + lfo_increment).rem_euclid(2.0 * PI);
 
         let lfo = match params.lfo_waveform {

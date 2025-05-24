@@ -72,11 +72,6 @@ impl Filter {
         self
     }
 
-    /// processes a single sample through this filter
-    fn process_sample(sample: i32) -> i32 {
-        todo!()
-    }
-
     /// processes an entire signal through this filter
     fn process_signal(signal: impl IntoIterator<Item = i32>) -> Vec<i32> {
         todo!()

@@ -9,8 +9,9 @@ pub mod filter;
 pub mod resample;
 pub mod ring_mod;
 
-use delay::{diffusion_delay, schroeder_all_pass, DelayParams};
+use delay::{diffusion_delay, DelayParams};
 use ring_mod::{ring_mod, RingModParams, Waveform};
+use resample::downsample;
 
 use hound::{WavReader, WavWriter};
 
@@ -26,16 +27,15 @@ const DELAY_PARAMS: DelayParams = DelayParams {
     mix: 100,
     delay: 519.0,
     feedback: 90.0,
+    stages: 20,
     width: 100.0,
-    diffusion: 20,
-    diffusion_size: 94.3,
     high_pass: 10.0,
     low_pass: 2_580.0,
 };
 
 fn main() {
     let r = WavReader::open("guitar.wav").unwrap();
-    let mut w = WavWriter::create("output.wav", r.spec()).unwrap();
+    let mut w = WavWriter::create("output.wav", r.spec().sample_rate(41_000)).unwrap();
 
     // total number of samples in the input file "guitar.wav"
     let len = r.len();
@@ -46,8 +46,9 @@ fn main() {
         .map(|sample| sample.expect("Failed to open signal as an array"))
         .collect::<Vec<i32>>();
 
-    let ring_mod_result = ring_mod(sample_rate, len as usize, signal, &RING_MOD_PARAMS);
-    let result = diffusion_delay(sample_rate, ring_mod_result, &DELAY_PARAMS);
+    let result = ring_mod(sample_rate, len as usize, signal, &RING_MOD_PARAMS);
+    let result = diffusion_delay(sample_rate, result, &DELAY_PARAMS);
+    //let result = downsample(sample_rate, result, 8_000);
 
     for sample in result {
         w.write_sample(sample).unwrap();

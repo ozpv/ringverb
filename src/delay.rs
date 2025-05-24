@@ -1,5 +1,4 @@
 use std::iter::repeat_n;
-use std::ops::Range;
 
 pub struct DelayParams {
     /// mix 0 to 100
@@ -34,7 +33,7 @@ fn all_pass_filter(signal: impl AsRef<[i32]>, buffer_len: usize, feedback: f32) 
         delay_line[i % buffer_len] = sample + feedback * res[i] as f32;
     }
 
-	res
+    res
 }
 
 pub fn diffusion_delay(
@@ -45,7 +44,7 @@ pub fn diffusion_delay(
     // calculated based on delay length
     let buffer_length = (params.delay * sample_rate as f32 / 1_000.0) as i32;
 
-    // allow for trails 
+    // allow for trails
     let mut res = signal.as_ref().to_vec();
     res.extend(repeat_n(0, (5 * sample_rate) as usize));
 

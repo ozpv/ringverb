@@ -4,5 +4,4 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-getrandom = "0.3.3"
-hound = "3.5.1"
+hound = { git = "https://github.com/ozpv/hound", branch = "wavspec-methods" }

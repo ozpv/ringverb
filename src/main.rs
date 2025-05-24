@@ -9,9 +9,9 @@ pub mod filter;
 pub mod resample;
 pub mod ring_mod;
 
-use delay::{diffusion_delay, DelayParams};
-use ring_mod::{ring_mod, RingModParams, Waveform};
+use delay::{DelayParams, diffusion_delay};
 use resample::downsample;
+use ring_mod::{RingModParams, Waveform, ring_mod};
 
 use hound::{WavReader, WavWriter};
 
@@ -35,7 +35,7 @@ const DELAY_PARAMS: DelayParams = DelayParams {
 
 fn main() {
     let r = WavReader::open("guitar.wav").unwrap();
-    let mut w = WavWriter::create("output.wav", r.spec().sample_rate(41_000)).unwrap();
+    let mut w = WavWriter::create("output.wav", r.spec().sample_rate(44_100)).unwrap();
 
     // total number of samples in the input file "guitar.wav"
     let len = r.len();
